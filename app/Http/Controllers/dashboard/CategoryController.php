@@ -29,7 +29,7 @@ class CategoryController extends Controller
       return $this->success($categories, "All Categories", 200);
     } else {
 
-      return $this->error("", 400, null);
+      return $this->error("No Categories Found", 400, null);
     }
   }
 
