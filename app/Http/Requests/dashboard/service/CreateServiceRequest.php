@@ -1,8 +1,9 @@
 <?php
 
-namespace App\Http\Requests\dashboard\admin;
+namespace App\Http\Requests\dashboard\service;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class CreateServiceRequest extends FormRequest
 {
@@ -23,8 +24,17 @@ class CreateServiceRequest extends FormRequest
   {
 
     return [
-      "name" => ['required', 'string'],
-      "image" => ["nullable", "image", "max:2048"],
+      'name' => [
+        'required',
+        'string',
+        Rule::unique('services', 'name'),
+      ],
+      'img' => [
+        'required',
+        'image',
+        'mimes:jpg,jpeg,png,webp',
+        'max:2048',
+      ],
     ];
   }
 }

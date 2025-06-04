@@ -1,10 +1,11 @@
 <?php
 
-namespace App\Http\Requests\dashboard\admin;
+namespace App\Http\Requests\dashboard\category;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
-class CreateCategoryRequest extends FormRequest
+class UpdateCitiyRequest extends FormRequest
 {
   /**
    * Determine if the user is authorized to make this request.
@@ -23,8 +24,12 @@ class CreateCategoryRequest extends FormRequest
   {
 
     return [
-      "name" => ['required', 'string'],
-      "image" => ["nullable", "image", "max:2048"],
+      'name' => [
+        $this->isMethod('PUT') ? 'required' : 'sometimes',
+        'string',
+        Rule::unique('cities', 'name')->ignore($this->citiy),
+      ],
+
     ];
-  } 
+  }
 }

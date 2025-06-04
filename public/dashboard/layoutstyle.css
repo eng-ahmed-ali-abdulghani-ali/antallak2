@@ -1,0 +1,147 @@
+body {
+    overflow-x: hidden;
+}
+
+.sidebar {
+    width: 250px;
+    height: 100vh;
+    background-color: #495057;
+    color: white;
+    position: fixed;
+    top: 0;
+    transition: all 0.3s ease;
+    z-index: 1000;
+    padding-top: 60px;
+}
+
+/* لما اللغة إنجليزي (dir=ltr) */
+html[dir="ltr"] .sidebar {
+    left: -250px;
+    right: auto;
+}
+
+html[dir="ltr"] .sidebar.active {
+    left: 0;
+}
+
+/* لما اللغة عربي (dir=rtl) */
+html[dir="rtl"] .sidebar {
+    right: -250px;
+    left: auto;
+}
+
+html[dir="rtl"] .sidebar.active {
+    right: 0;
+}
+
+.sidebar a {
+    color: #fad353;
+    padding: 10px 20px;
+    display: block;
+    text-decoration: none;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+table a {
+    color: #333;
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.3s ease;
+}
+
+.sidebar a:hover {
+    background-color: #495750;
+}
+
+#mainContent {
+    transition: margin 0.3s ease;
+    padding: 20px;
+}
+
+html[dir="ltr"] #mainContent.shifted {
+    margin-left: 250px;
+}
+
+html[dir="rtl"] #mainContent.shifted {
+    margin-right: 250px;
+}
+
+.header {
+    height: 60px;
+    background-color: #495057;
+    display: flex;
+    align-items: center;
+    padding: 0 20px;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 1100;
+}
+
+.mb-0 {
+    color: #fad353;
+}
+
+.toggle-btn {
+    font-size: 24px;
+    background: none;
+    border: none;
+    color: #343a40;
+}
+
+.localization-switcher {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 0 10px;
+}
+
+.language-option {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    color: inherit;
+    padding: 5px 8px;
+    border-radius: 4px;
+    transition: all 0.3s ease;
+}
+
+.language-option:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+    transform: translateY(-1px);
+}
+
+.language-flag {
+    width: 30px;
+    height: 25px;
+    object-fit: contain;
+    margin: 0 4px;
+}
+
+.language-label {
+    font-weight: 500;
+    font-size: 0.9rem;
+    color: #fad353;
+}
+
+.language-separator {
+    width: 1px;
+    height: 15px;
+    background-color: rgba(0, 0, 0, 0.1);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .localization-switcher {
+        gap: 5px;
+        padding: 0 5px;
+    }
+
+    .language-option {
+        padding: 3px 5px;
+    }
+
+    .language-label {
+        font-size: 0.8rem;
+    }
+}

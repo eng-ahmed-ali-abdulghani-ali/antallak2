@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\dashboard;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\dashboard\admin\CreateServiceRequest;
+use App\Http\Requests\dashboard\service\CreateServiceRequest;
 use App\ResponseApi\ResponseApi;
 use App\Services\api\client\ServiceService;
 use Illuminate\Database\QueryException;
@@ -14,7 +14,6 @@ class ServiceController extends Controller
   //
   use ResponseApi;
   //
-
   protected $service;
 
   public function __construct(ServiceService $service)
@@ -32,7 +31,6 @@ class ServiceController extends Controller
       return $this->error("No Services Available", 400, null);
     }
   }
-
 
 
   public function store(CreateServiceRequest $request)
@@ -68,20 +66,12 @@ class ServiceController extends Controller
       return $this->error($e->getMessage(), 400, null);
     }
   }
-  public function delete($id)
+  public function destroy($id)
   {
 
-    try {
-      DB::beginTransaction();
-      $this->service->delete($id);
-      DB::commit();
-      return $this->success(null, "All Categories", 200);
-    } catch (QueryException $e) {
-      DB::rollBack();
-      return $this->error($e->getMessage());
-    } catch (\Exception $e) {
-      DB::rollBack();
-      return $this->error($e->getMessage(), 400, null);
-    }
+
+    $this->service->delete($id);
+
+    return $this->success(null, "Service deleted successfuly", 200);
   }
 }
