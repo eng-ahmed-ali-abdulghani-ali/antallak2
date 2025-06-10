@@ -34,6 +34,25 @@ html[dir="rtl"] .sidebar.active {
     right: 0;
 }
 
+.form-control,
+.form-select {
+    text-align: right;
+    direction: rtl;
+}
+
+/* ضبط Floating Label لليمين */
+.form-floating > label {
+    right: 0;
+    left: auto;
+    transform-origin: top right;
+    padding-right: 1.5rem;
+}
+
+/* تعديل مكان البليس هولدر في الإختيارات */
+.form-select:required:invalid {
+    color: #6c757d;
+    text-align: right;
+}
 .sidebar a {
     color: #fad353;
     padding: 10px 20px;

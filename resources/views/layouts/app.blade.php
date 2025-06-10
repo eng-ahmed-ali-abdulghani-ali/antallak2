@@ -22,7 +22,7 @@
   <div class="header">
     <button id="toggleSidebar" class="toggle-btn"><i class="fas fa-bars"></i></button>
     <h5 class="mb-0">@yield('title')</h5>
-    <div class="localization-switcher">
+    {{-- <div class="localization-switcher">
       <a href="{{ url('/lang/en') }}" class="language-option">
         <img src="https://alsaifco-ksa.com/Dashboard/assets/Front/assets/img/usa.png" class="language-flag" alt="EN">
         <span class="language-label">EN</span>
@@ -32,7 +32,7 @@
         <img src="https://alsaifco-ksa.com/Dashboard/assets/Front/assets/img/ksa.png" class="language-flag" alt="AR">
         <span class="language-label">ع</span>
       </a>
-    </div>
+    </div> --}}
     <a href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();"
       class="btn btn-outline-danger btn-sm">
       {{ __('messages.logout') }} <i class="fas fa-sign-out-alt ms-1"></i>

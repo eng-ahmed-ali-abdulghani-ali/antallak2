@@ -20,7 +20,8 @@
       <tr>
         <th>#</th>
         <th>الاسم</th>
-        <th>البريد الإلكتروني</th>
+        <th>رقم الهاتف</th>
+        <th>الدور</th>
         <th>الصورة</th>
         <th>الإجراءات</th>
       </tr>
@@ -30,7 +31,8 @@
       <tr>
         <td>{{ $loop->iteration }}</td>
         <td style="font-weight: bold">{{ $user->name }}</td>
-        <td>{{ $user->email }}</td>
+        <td>{{ $user->phone }}</td>
+        <td>{{ $user->role }}</td>
         <td>
         @if($user->image_url)
       <img src="{{ $user->image_url }}" alt="User Image" style="width: 60px; height: 40px; object-fit: cover;">
@@ -39,11 +41,10 @@
       @endif
         </td>
         <td>
-        <a class="btn btn-sm btn-primary me-2" href="{{ route('user.edit', $user->id) }}">
+        <a class="btn btn-sm btn-primary me-2" href="#">
         <i class="fa fa-edit"></i>
         </a>
-        <form action="{{ route('user.destroy', $user->id) }}" method="POST" class="d-inline"
-        id="delete-form-{{ $user->id }}">
+        {{-- <form action="" method="POST" class="d-inline" id="delete-form-{{ $user->id }}"> --}}
         @csrf
         @method('DELETE')
         <button type="button" class="btn btn-sm btn-danger" onclick="confirmDeletion({{ $user->id }})">

@@ -2,28 +2,7 @@
 @section('type_User', 'إضافة مندوب توصيل')
 
 @section('role-fields')
-  <style>
-    /* تخصيص محاذاة النص لليمين في حقول الإدخال */
-    .form-control,
-    .form-select {
-    text-align: right;
-    direction: rtl;
-    }
 
-    /* ضبط Floating Label لليمين */
-    .form-floating>label {
-    right: 0;
-    left: auto;
-    transform-origin: top right;
-    padding-right: 1.5rem;
-    }
-
-    /* تعديل مكان البليس هولدر في الإختيارات */
-    .form-select:required:invalid {
-    color: #6c757d;
-    text-align: right;
-    }
-  </style>
   <div class="row g-3">
 
     {{-- بيانات شخصية --}}
@@ -43,17 +22,24 @@
         <input type="text" name="phone" class="form-control" id="phone" placeholder="رقم الجوال" required>
         <label for="phone">رقم الجوال</label>
         </div>
-
+        <div class="col-md-6 form-floating position-relative">
+        <input type="password" name="password" id="password" class="form-control" placeholder="كلمة المرور" required
+          minlength="8" title="يجب أن تحتوي كلمة المرور على الأقل على 8 أحرف، حرف كبير، حرف صغير، رقم، ورمز خاص">
+        <label for="password">كلمة المرور</label>
+        <button type="button" class="btn btn-link position-absolute end-0 top-0 mt-3 me-2 toggle-password"
+          aria-label="إظهار/إخفاء كلمة المرور">
+        </button>
+        <div class="form-text">يجب أن تحتوي على 8 أحرف على الأقل، حرف كبير، حرف صغير، رقم، ورمز خاص</div>
+        </div>
         <div class="col-md-6 form-floating">
-        <select name="nationality" class="form-select" id="nationality" required>
-          <option value="" disabled selected>اختر الجنسية</option>
-          <option value="saudi">سعودي</option>
-          <option value="egyptian">مصري</option>
-          <option value="other">أخرى</option>
+        <select name="nationality" id="nationality" class="form-control">
+          <option value="">اختر الجنسية</option>
+          @foreach ($nationalities as $nationality)
+        <option value="{{ $nationality }}">{{ $nationality }}</option>
+      @endforeach
         </select>
         <label for="nationality">الجنسية</label>
         </div>
-
         <div class="col-md-6 form-floating">
         <input type="date" name="birth_date" class="form-control" id="birth_date" placeholder="تاريخ الميلاد">
         <label for="birth_date">تاريخ الميلاد</label>
@@ -105,6 +91,16 @@
         <input type="text" name="plate_number" class="form-control" id="plate_number" placeholder="رقم اللوحة">
         <label for="plate_number">رقم اللوحة</label>
         </div>
+
+        <div class="col-md-6 form-floating">
+        <select name="vehicle_type" class="form-select" id="vehicle_type" required>
+          <option value="" disabled selected> اختر اسم القائد المشرف </option>
+          <option value="">احمد</option>
+          <option value="motorcycle">خالد</option>
+        </select>
+        <label for="vehicle_type"> القائد المشرف</label>
+        </div>
+
       </div>
       </div>
     </div>
@@ -159,16 +155,7 @@
     </div>
 
     {{-- أزرار الحفظ والإلغاء --}}
-    <div class="col-12 mt-4">
-    <div class="d-flex justify-content-end gap-3">
-      <button type="button" class="btn btn-secondary px-4 py-2" onclick="history.back()">
-      <i class="fas fa-times me-2"></i> إلغاء
-      </button>
-      <button type="submit" class="btn btn-success px-4 py-2">
-      <i class="fas fa-save me-2"></i> حفظ البيانات
-      </button>
-    </div>
-    </div>
+
 
   </div>
 @endsection

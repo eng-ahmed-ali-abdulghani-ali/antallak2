@@ -105,16 +105,16 @@ class User extends Authenticatable implements HasMedia
     // Haversine formula to calculate the distance (in kilometers) between two coordinates
     $haversine = '(6371 * acos(
                         cos(radians(?)) *
-                        cos(radians(driver_info.latitude)) *
-                        cos(radians(driver_info.longitude) - radians(?)) +
+                        cos(radians(driver_infos.latitude)) *
+                        cos(radians(driver_infos.longitude) - radians(?)) +
                         sin(radians(?)) *
-                        sin(radians(driver_info.latitude))
+                        sin(radians(driver_infos.latitude))
                     ))';
 
     // Build the query to get nearby drivers
     return $query
       // Join driver_info table to access coordinates (latitude, longitude)
-      ->join('driver_info', 'users.id', '=', 'driver_info.user_id')
+      ->join('driver_infos', 'users.id', '=', 'driver_infos.user_id')
 
       // Filter only active drivers
       ->where('users.role', self::ROLE_DRIVER)
@@ -124,7 +124,7 @@ class User extends Authenticatable implements HasMedia
       ->whereRaw("$haversine < ?", [$pickup_lat, $pickup_lng, $pickup_lat, $radius_km])
 
       // Select user info and driver coordinates
-      ->select('users.*', 'driver_info.latitude', 'driver_info.longitude')
+      ->select('users.*', 'driver_infos.latitude', 'driver_infos.longitude')
 
       // Add calculated distance (in km) to the result set
       ->selectRaw("$haversine AS distance", [$pickup_lat, $pickup_lng, $pickup_lat])
