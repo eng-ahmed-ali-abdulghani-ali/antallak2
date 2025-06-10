@@ -4,6 +4,7 @@ namespace App\Http\Controllers\api\client;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\api\client\GetTripRequest;
+use App\Models\SystemSetting;
 use App\Services\api\client\TripService;
 
 class TripController extends Controller
@@ -17,6 +18,8 @@ class TripController extends Controller
 
     public function getTrip(GetTripRequest $request)
     {
+        return response()->json(SystemSetting::where('key', 'driver_commission_tiers_on_orders')->first());
+
         return $this->trip->getTrip($request->validated());
     }
 
