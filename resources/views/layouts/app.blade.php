@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="{{ session('langs') ?? 'en' }} " dir="{{ session('langs', app()->getLocale()) == 'ar' ? 'rtl' : 'ltr' }}">
+<html lang="ar " dir="rtl">
 
 
 <head>
@@ -42,12 +42,10 @@
   {{-- Sidebar --}}
   <div class="sidebar" id="sidebar">
 
+    <a href="#"><i class="fa-solid fa-users me-2"></i> المستخدمين</a>
     <a href="{{ url('/category') }}"><i class="fa-solid fa-list me-2"></i>
-      {{ __('messages.categories') }}
-    </a>
-    <a href="#"><i class="fa-solid fa-cubes me-2"></i> SubCategories</a>
+      الفئات </a>
     <a href="#"><i class="fa-brands fa-product-hunt me-2"></i> Packages</a>
-    <a href="#"><i class="fa-solid fa-users me-2"></i> Users</a>
     <a href="#"><i class="fa-solid fa-circle-question me-2"></i> Questions</a>
     <a href="#"><i class="fa-solid fa-money-check-dollar me-2"></i> Subscriptions</a>
     <a href="#"><i class="fa-solid fa-atom me-2"></i> Promo Codes</a>
