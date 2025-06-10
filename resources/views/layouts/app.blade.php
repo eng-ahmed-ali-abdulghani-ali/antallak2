@@ -1,8 +1,6 @@
 <!DOCTYPE html>
-<html lang="{{ session('local') ?? 'en' }} " dir="{{ session('locale', app()->getLocale()) == 'ar' ? 'rtl' : 'ltr' }}">
-@php
-  dd(session('local'));   
-@endphp
+<html lang="{{ session('langs') ?? 'en' }} " dir="{{ session('langs', app()->getLocale()) == 'ar' ? 'rtl' : 'ltr' }}">
+
 
 <head>
   <meta charset="UTF-8">
@@ -37,7 +35,7 @@
     </div>
     <a href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();"
       class="btn btn-outline-danger btn-sm">
-      Logout <i class="fas fa-sign-out-alt ms-1"></i>
+      {{ __('messages.logout') }} <i class="fas fa-sign-out-alt ms-1"></i>
     </a>
     <form id="logout-form" action="" method="POST" style="display: none;">@csrf</form>
   </div>
@@ -57,9 +55,7 @@
     <a href="#"><i class="fa-solid fa-gears me-2"></i> Settings</a>
     <a href="#"><i class="fa-solid fa-calendar-days me-2"></i> Exam Dates</a>
     <a href="#"><i class="fa-solid fa-address-card me-2"></i> About Us</a>
-    <a href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-      <i class="fas fa-sign-out-alt me-2"></i> Logout
-    </a>
+
   </div>
 
   {{-- Main Content --}}

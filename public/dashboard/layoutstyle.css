@@ -41,7 +41,9 @@ html[dir="rtl"] .sidebar.active {
     text-decoration: none;
     transition: background-color 0.3s ease, color 0.3s ease;
 }
-
+html[dir="rtl"] .direction-aware-icon {
+    transform: rotate(180deg);
+}
 table a {
     color: #333;
     text-decoration: none;

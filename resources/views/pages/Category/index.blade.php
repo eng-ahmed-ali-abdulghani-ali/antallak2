@@ -1,8 +1,8 @@
 @extends('layouts.app')
 
-@section('title')
-  All Categories
-@endsection
+  @section('title')
+    {{ __('messages.all categories') }}
+  @endsection
 
 @section('content')
   <div class="container">
@@ -10,7 +10,7 @@
     <h2></h2>
     <a class="btn btn-success" style=" transition: background-color 0.3s ease;" on data-bs-toggle="modal"
       data-bs-target="#createCategoryModal">
-      Create New Category
+      {{ __('messages.Create New Category') }}
     </a>
     </div>
 
@@ -19,20 +19,20 @@
       <thead class="table-dark">
       <tr>
         <th>#</th>
-        <th>Name</th>
-        <th>Image</th>
-        <th>Actions</th>
+        <th>{{ __('messages.name') }}</th>
+        <th>{{__('messages.image')}}</th>
+        <th>{{ __('messages.actions') }}</th>
       </tr>
       </thead>
       <tbody>
       @forelse ($categories as $category)
       <tr>
-        <td>{{ $category->id }}</td>
-        <td>
-        <a href="{{ route('category.show', $category->id) }}">
+        <td>{{ $loop->iteration }}</td>
+        <td style="font-weight: bold">
         {{ $category->name }}
-        </a>
-        </td>   
+
+        </td>
+        
         <td>
         @if($category->image_url)
       <img src="{{ $category->image_url }}" alt="Image" style="width: 60px; height: 40px; object-fit: cover;">
@@ -56,7 +56,7 @@
       </tr>
     @empty
       <tr>
-      <td colspan="4">No categories found.</td>
+      <td colspan="4">{{ __('messages.no_categories') }}</td>
       </tr>
     @endforelse
       </tbody>
@@ -64,7 +64,8 @@
     </div>
 
     <a href="{{ url()->previous() }}" class="btn btn-secondary mt-3">
-    <i class="fa fa-arrow-left"></i> Back
+    <i class="fa fa-arrow-left direction-aware-icon"></i>
+    {{ __('messages.back') }}
     </a>
   </div>
 
