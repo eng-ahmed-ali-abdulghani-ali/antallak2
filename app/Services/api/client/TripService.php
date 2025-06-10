@@ -2,6 +2,8 @@
 
 namespace App\Services\api\client;
 
+use App\Models\City;
+use App\Models\CityTranslation;
 use App\Models\PricingRule;
 use App\Models\SystemSetting;
 use App\Models\Trip;
@@ -12,14 +14,17 @@ use Illuminate\Support\Facades\Http;
 
 class TripService
 {
-    use  ApiResponse;
+    use ApiResponse;
 
+    /**
+     * Initiate a trip request to all nearby drivers.
+     */
     public function getTrip(array $data)
     {
         // Get the authenticated user
         $client = Auth::user();
 
-        // Ensure the user is a client
+        // Ensure the authenticated user is a client
         if ($client->role !== 'client') {
             return $this->setCode(404)->setSuccess(false)->setMessage('No Client found.')->send();
         }
@@ -27,14 +32,15 @@ class TripService
         $pickup_lat = $data['pickup_latitude'];
         $pickup_lng = $data['pickup_longitude'];
 
-        // Retrieve nearby drivers
+        // Get all drivers near the pickup location
         $nearbyDrivers = User::query()->nearbyDrivers($pickup_lat, $pickup_lng)->get();
 
         // Send trip request to each nearby driver
         foreach ($nearbyDrivers as $driver) {
             $this->sendTripRequest($driver, $client, $data);
         }
-        // You can optionally return drivers or a summary here
+
+        // Return success response
         return $this->setCode(201)->setSuccess(true)->setMessage('Trip requests to drivers have been successfully sent.')->send();
     }
 
@@ -43,55 +49,75 @@ class TripService
      */
     private function sendTripRequest($driver, $client, array $data)
     {
-        $service_id = $data['service_id'];
-        $category_id = $data['category_id'];
+        // Extract trip and location data
+        $service_id        = $data['service_id'];
+        $category_id       = $data['category_id'];
         $payment_method_id = $data['payment_method_id'];
-        $pickup_lat = $data['pickup_latitude'];
-        $pickup_lng = $data['pickup_longitude'];
-        $dropoff_lat = $data['dropoff_latitude'];
-        $dropoff_lng = $data['dropoff_longitude'];
+        $pickup_lat        = $data['pickup_latitude'];
+        $pickup_lng        = $data['pickup_longitude'];
+        $dropoff_lat       = $data['dropoff_latitude'];
+        $dropoff_lng       = $data['dropoff_longitude'];
+        $cit_name          = $data['cit_name'];
 
-        // Calculate the straight-line distance between pickup and dropoff
+        // Calculate trip distance
         $distance = $this->getDistance($pickup_lat, $pickup_lng, $dropoff_lat, $dropoff_lng, 'km');
 
-        $cityName = $this->getCityFromCoordinates($pickup_lat, $pickup_lng);
-        // TODO: Replace with actual logic to get city ID based on pickup location
-        $city_id = 1;
+        // If you don't send it in the request, take it from here
+       // $cityName = $this->getCityFromCoordinates($pickup_lat, $pickup_lng);
 
-        // Get pricing details using the applicable pricing rule
+        // Normalize the Arabic city name for matching
+        $cit_name = strtolower($cit_name); // Convert to lowercase
+        $cit_name = preg_replace('/\s+/', '', $cit_name); // Remove all spaces
+
+
+        // Get the city ID from city translations
+        $city_id = CityTranslation::where('name', $cit_name)->first()?->city_id;
+
+        if (!$city_id) {
+            // If it is not available, we will calculate the price of Medina
+            $city_id = CityTranslation::where('name', 'المدينةالمنورة')->first()?->city_id;
+
+            // If it is not available,
+            if (!$city_id) {
+                throw new \Exception("City not found, including fallback.");
+            }
+        }
+
+
+
+        // Get pricing rule and calculate total fare
         $pricing = $this->calcPricingRules($city_id, $category_id, $distance);
 
         // Get driver commission percent from system settings
-        $commission_percent = SystemSetting::where('key', 'driver_commission_percent')->value('value');
+        $commission_percent = SystemSetting::where('key', 'driver_commission_percentage_for_delivery')->value('value');
 
-        // Create a new trip record
+        // Create trip entry
         Trip::create([
-            'service_id' => $service_id,
-            'client_id' => $client->id,
-            'driver_id' => $driver->id,
-            'payment_method_id' => $payment_method_id,
-            'category_id' => $category_id,
-            'pickup_latitude' => $pickup_lat,
-            'pickup_longitude' => $pickup_lng,
-            'dropoff_latitude' => $dropoff_lat,
-            'dropoff_longitude' => $dropoff_lng,
-            'estimated_duration' => $driver->estimated_duration, // distance from driver to pickup point
-            'pricing_rule_id' => $pricing['pricing_rule_id'],
-            'total_amount' => $pricing['total_amount'],
-            'driver_commission_percent' => $commission_percent,
-            // The following fields will be filled later by driver
-            // 'start_time' => null,
-            // 'end_time'   => null,
+            'service_id'               => $service_id,
+            'client_id'                => $client->id,
+            'driver_id'                => $driver->id,
+            'payment_method_id'        => $payment_method_id,
+            'category_id'              => $category_id,
+            'pickup_latitude'          => $pickup_lat,
+            'pickup_longitude'         => $pickup_lng,
+            'dropoff_latitude'         => $dropoff_lat,
+            'dropoff_longitude'        => $dropoff_lng,
+            'estimated_duration'       => $driver->estimated_duration, // Approx. time to reach pickup
+            'pricing_rule_id'          => $pricing['pricing_rule_id'],
+            'total_amount'             => $pricing['total_amount'],
+            'driver_commission_percent'=> $commission_percent,
+            // start_time and end_time will be set later by the driver
         ]);
+
 
     }
 
     /**
-     * Calculate the distance between two geo-coordinates using the Haversine formula.
+     * Calculate distance using the Haversine formula (in kilometers or miles).
      */
     private function getDistance(float $lat1, float $lng1, float $lat2, float $lng2, string $unit = 'km'): float
     {
-        $earthRadius = $unit === 'mi' ? 3958.8 : 6371; // Radius of Earth in mi or km
+        $earthRadius = $unit === 'mi' ? 3958.8 : 6371; // Earth radius in miles or kilometers
 
         // Convert degrees to radians
         $lat1 = deg2rad($lat1);
@@ -99,24 +125,21 @@ class TripService
         $lat2 = deg2rad($lat2);
         $lng2 = deg2rad($lng2);
 
-        // Apply Haversine formula
+        // Haversine formula
         $dLat = $lat2 - $lat1;
         $dLng = $lng2 - $lng1;
 
-        $a = sin($dLat / 2) ** 2 +
-            cos($lat1) * cos($lat2) * sin($dLng / 2) ** 2;
-
+        $a = sin($dLat / 2) ** 2 + cos($lat1) * cos($lat2) * sin($dLng / 2) ** 2;
         $c = 2 * atan2(sqrt($a), sqrt(1 - $a));
 
-        return round($earthRadius * $c, 3); // Distance in chosen unit, rounded to 3 decimals
+        return round($earthRadius * $c, 3); // Rounded to 3 decimal places
     }
 
     /**
-     * Determine pricing rule and calculate trip total.
+     * Retrieve pricing rule and calculate trip cost.
      */
     private function calcPricingRules(int $city_id, int $category_id, float $distance): array
     {
-        // Fetch the applicable pricing rule
         $pricingRule = PricingRule::where([
             ['city_id', '=', $city_id],
             ['category_id', '=', $category_id],
@@ -126,29 +149,30 @@ class TripService
             throw new \Exception("Pricing rule not found for city_id: $city_id, category_id: $category_id");
         }
 
-        // Calculate total based on base fare + cost per km
+        // Calculate fare: base + (per km rate × distance)
         $total_amount = $pricingRule->base_fare + ($distance * $pricingRule->cost_per_km);
 
-        // Apply minimum fare if calculated amount is below threshold
+        // Ensure minimum fare
         if ($total_amount < $pricingRule->minimum_fare) {
             $total_amount = $pricingRule->minimum_fare;
         }
 
         return [
-            'total_amount' => $total_amount,
+            'total_amount'    => $total_amount,
             'pricing_rule_id' => $pricingRule->id,
         ];
     }
 
-
-
+    /**
+     * Get the city name from latitude and longitude using Google Maps API.
+     */
     private function getCityFromCoordinates(float $lat, float $lng): ?string
     {
-        $apiKey = config('services.google_maps.key'); // Store this in your config/services.php
+        $apiKey = config('services.google_maps.key');
 
         $response = Http::get("https://maps.googleapis.com/maps/api/geocode/json", [
             'latlng' => "$lat,$lng",
-            'key' => $apiKey,
+            'key'    => $apiKey,
         ]);
 
         if ($response->failed()) {
@@ -161,19 +185,21 @@ class TripService
             return null;
         }
 
-        // Look through the address components to find locality (city)
+        // Search for city/locality in address components
         foreach ($results[0]['address_components'] as $component) {
             if (in_array('locality', $component['types'])) {
                 return $component['long_name'];
             }
         }
 
-        return null; // If no city found
+        return null; // City not found
     }
 
-
+    /**
+     * Accept trip functionality (to be implemented).
+     */
     public function acceptTrip()
     {
-
+        // Future implementation for accepting a trip
     }
 }

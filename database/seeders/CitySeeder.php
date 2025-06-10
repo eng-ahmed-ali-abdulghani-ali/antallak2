@@ -11,21 +11,21 @@ class CitySeeder extends Seeder
     public function run(): void
     {
         $cities = [
-            ['en' => 'Riyadh', 'ar' => 'الرياض'],
-            ['en' => 'Jeddah', 'ar' => 'جدة'],
-            ['en' => 'Mecca', 'ar' => 'مكة المكرمة'],
-            ['en' => 'Medina', 'ar' => 'المدينة المنورة'],
-            ['en' => 'Dammam', 'ar' => 'الدمام'],
-            ['en' => 'Khobar', 'ar' => 'الخبر'],
-            ['en' => 'Abha', 'ar' => 'أبها'],
-            ['en' => 'Tabuk', 'ar' => 'تبوك'],
-            ['en' => 'Buraydah', 'ar' => 'بريدة'],
-            ['en' => 'Hail', 'ar' => 'حائل'],
-            ['en' => 'Najran', 'ar' => 'نجران'],
-            ['en' => 'Jazan', 'ar' => 'جازان'],
-            ['en' => 'Al Baha', 'ar' => 'الباحة'],
-            ['en' => 'Sakaka', 'ar' => 'سكاكا'],
-            ['en' => 'Yanbu', 'ar' => 'ينبع'],
+            ['en' => 'riyadh', 'ar' => 'الرياض'],
+            ['en' => 'jeddah', 'ar' => 'جدة'],
+            ['en' => 'mecca', 'ar' => 'مكة المكرمة'],
+            ['en' => 'medina', 'ar' => 'المدينةالمنورة'],
+            ['en' => 'dammam', 'ar' => 'الدمام'],
+            ['en' => 'khobar', 'ar' => 'الخبر'],
+            ['en' => 'abha', 'ar' => 'أبها'],
+            ['en' => 'tabuk', 'ar' => 'تبوك'],
+            ['en' => 'buraydah', 'ar' => 'بريدة'],
+            ['en' => 'hail', 'ar' => 'حائل'],
+            ['en' => 'najran', 'ar' => 'نجران'],
+            ['en' => 'jazan', 'ar' => 'جازان'],
+            ['en' => 'alBaha', 'ar' => 'الباحة'],
+            ['en' => 'sakaka', 'ar' => 'سكاكا'],
+            ['en' => 'yanbu', 'ar' => 'ينبع'],
         ];
 
         foreach ($cities as $key => $cityData) {

@@ -13,12 +13,18 @@ return new class extends Migration {
         Schema::create('system_settings', function (Blueprint $table) {
             $table->id();
 
-            $table->string('key_name')
-                ->unique()
-                ->comment('The unique key identifier for the setting');
 
-            $table->string('value')
+            $table->string('key')->index()
+                ->comment('The  key identifier for the setting');
+
+
+            $table->text('value')
                 ->comment('The corresponding value for the setting');
+
+
+            $table->string('type')->default('string')
+                ->comment('The data type of the setting value (e.g., string, integer, json)');
+
 
             $table->timestamps();
         });
