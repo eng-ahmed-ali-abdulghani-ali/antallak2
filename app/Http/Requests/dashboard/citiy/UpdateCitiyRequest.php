@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests\dashboard\category;
+namespace App\Http\Requests\dashboard\citiy;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;

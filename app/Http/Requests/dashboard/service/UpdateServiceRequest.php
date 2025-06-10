@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Requests\dashboard\category;
+namespace App\Http\Requests\dashboard\service;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-class UpdateCategoryRequest extends FormRequest
+class UpdateServiceRequest extends FormRequest
 {
   /**
    * Determine if the user is authorized to make this request.
