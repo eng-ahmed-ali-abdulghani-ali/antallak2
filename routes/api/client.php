@@ -1,25 +1,19 @@
 <?php
 
-use App\Http\Controllers\api\client\AuthController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\api\client\{ServiceController, TripController};
 
 
 Route::prefix('client')->group(function () {
 
 
-// Guest-only client auth routes (sign-up, OTP verification, sign-in) handled by AuthController
-    Route::middleware('guest')->controller(AuthController::class)->group(function () {
-        Route::post('sign-up', 'signUp');
-        Route::post('verify-otp', 'verifyOTP');
-        Route::post('sign-in', 'signIn');
-    });
-    
+  Route::controller(ServiceController::class)->group(function () {
+    Route::get('get-services', 'getServices');
+  });
 
 
-
+  Route::controller(TripController::class)->group(function () {
+    Route::post('get-trip', 'getTrip');
+    Route::post('accept-trip', 'acceptTrip');
+  });
 });
-
-
-
-
-

@@ -2,6 +2,8 @@
 
 namespace Database\Seeders;
 
+use App\Models\Service;
+use App\Models\ServiceTranslation;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
@@ -12,13 +14,37 @@ class ServiceSeeder extends Seeder
    */
   public function run(): void
   {
-    //
+    // Define services and their translations
     $services = [
       [
-        'name' => 'Ride'
+        'translations' => [
+          ['locale' => 'en', 'name' => 'Ride'],
+          ['locale' => 'ar', 'name' => 'طلب سيارة'],
+        ],
       ],
-      ['name' => 'Delivery'],
+      [
+        'translations' => [
+          ['locale' => 'en', 'name' => 'Delivery'],
+          ['locale' => 'ar', 'name' => 'توصيل طلبات'],
+        ],
+      ],
     ];
-    DB::table(table: 'services')->insert($services);
+
+    foreach ($services as $key => $serviceData) {
+      // Create the main service record
+      $service = Service::create();
+
+      $service->addMediaFromUrl('https://picsum.photos/200?random=' . $key)
+        ->toMediaCollection(Service::COLLECTION_SERVICES_IMAGE);
+
+      // Create the translations for this service
+      foreach ($serviceData['translations'] as $translation) {
+        ServiceTranslation::create([
+          'service_id' => $service->id,
+          'locale'     => $translation['locale'],
+          'name'       => $translation['name'],
+        ]);
+      }
+    }
   }
 }

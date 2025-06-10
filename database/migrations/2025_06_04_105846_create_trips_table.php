@@ -80,9 +80,9 @@ return new class extends Migration
                 ->default('pending')
                 ->comment('Current status of the trip');
 
-            $table->dateTime('start_time')->nullable()->comment('Trip start time');
+            $table->dateTime('start_time')->nullable()->comment('TripService start time');
 
-            $table->dateTime('end_time')->nullable()->comment('Trip end time');
+            $table->dateTime('end_time')->nullable()->comment('TripService end time');
 
             $table->timestamps();
             $table->softDeletes();

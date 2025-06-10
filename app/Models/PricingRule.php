@@ -16,8 +16,10 @@ class PricingRule extends Model
      * The attributes that are mass assignable.
      */
     protected $fillable = [
+
         'city_id',
         'category_id',
+
         'base_fare',
         'cost_per_km',
         'cost_per_minute',

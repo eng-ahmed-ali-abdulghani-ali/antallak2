@@ -2,26 +2,29 @@
 
 namespace App\Models;
 
+use Astrotomic\Translatable\Translatable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Spatie\MediaLibrary\InteractsWithMedia;
 use Spatie\MediaLibrary\HasMedia;
+use Spatie\MediaLibrary\InteractsWithMedia;
+use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
 
 class Category extends Model implements HasMedia
 {
-  use HasFactory, InteractsWithMedia;
+  use HasFactory, Translatable, InteractsWithMedia;
 
   protected $fillable = ['name'];
-  protected $hidden = ['media'];
+  public $translatedAttributes = ['name'];
 
-  public function registerMediaCollections(): void
+  public $timestamps = false;
+
+  public const COLLECTION_CATEGORIES_IMAGE = 'CategoriesImages';
+
+
+
+  public function registerMediaCollections(?Media $media = null): void
   {
-    $this->addMediaCollection('image')->singleFile();
+    $this->addMediaCollection(self::COLLECTION_CATEGORIES_IMAGE)->singleFile(); // Ensures only the latest image is kept
   }
-  public function getImageUrlAttribute()
-  {
-    return $this->getFirstMediaUrl('image');
-  }
-  protected $appends = ['image_url'];
 }

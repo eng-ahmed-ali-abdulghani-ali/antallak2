@@ -3,25 +3,31 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-
 use Illuminate\Database\Eloquent\Model;
-use Spatie\MediaLibrary\InteractsWithMedia;
 use Spatie\MediaLibrary\HasMedia;
+use Spatie\MediaLibrary\InteractsWithMedia;
+use Spatie\MediaLibrary\MediaCollections\Models\Media;
+use Astrotomic\Translatable\Translatable;
 
 class Service extends Model implements HasMedia
 {
-  use InteractsWithMedia, HasFactory;
+  use HasFactory, InteractsWithMedia, Translatable;
+
+  public const COLLECTION_SERVICES_IMAGE = 'servicesImages';
+
+
   protected $fillable = ['name'];
+  public $translatedAttributes = ['name'];
 
-  protected $hidden = ['media'];
+  public $timestamps = false;
 
-  public function registerMediaCollections(): void
+  // protected $hidden = ['name', 'created_at', 'updated_at'];
+
+  /**
+   * Register the media collections for the service model.
+   */
+  public function registerMediaCollections(?Media $media = null): void
   {
-    $this->addMediaCollection('image')->singleFile();
+    $this->addMediaCollection(self::COLLECTION_SERVICES_IMAGE)->singleFile(); // Ensures only the latest image is kept
   }
-  public function getImageUrlAttribute()
-  {
-    return $this->getFirstMediaUrl('image');
-  }
-  protected $appends = ['image_url'];
 }
