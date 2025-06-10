@@ -11,18 +11,17 @@ use App\Traits\ApiResponse;
 
 class ServiceController extends Controller
 {
-    use ApiResponse;
+  use ApiResponse;
 
-    public $services;
+  public $services;
 
-    public function __construct(ServicesService $services)
-    {
-        $this->services = $services;
-    }
+  public function __construct(ServicesService $services)
+  {
+    $this->services = $services;
+  }
 
-    public function getServices()
-    {
-        return $this->services->getServices();
-    }
-
+  public function getServices()
+  {
+    return $this->services->getServices();
+  }
 }

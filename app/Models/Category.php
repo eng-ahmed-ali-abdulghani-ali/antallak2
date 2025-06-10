@@ -12,19 +12,19 @@ use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
 class Category extends Model implements HasMedia
 {
-    use HasFactory, Translatable,InteractsWithMedia;
+  use HasFactory, Translatable, InteractsWithMedia;
 
-    protected $fillable = ['name'];
-    public $translatedAttributes = ['name'];
+  protected $fillable = ['name'];
+  public $translatedAttributes = ['name'];
 
-    public $timestamps = false;
+  public $timestamps = false;
 
-    public const COLLECTION_CATEGORIES_IMAGE = 'CategoriesImages';
+  public const COLLECTION_CATEGORIES_IMAGE = 'CategoriesImages';
 
 
 
-    public function registerMediaCollections(?Media $media = null): void
-    {
-        $this->addMediaCollection(self::COLLECTION_CATEGORIES_IMAGE)->singleFile(); // Ensures only the latest image is kept
-    }
+  public function registerMediaCollections(?Media $media = null): void
+  {
+    $this->addMediaCollection(self::COLLECTION_CATEGORIES_IMAGE)->singleFile(); // Ensures only the latest image is kept
+  }
 }
